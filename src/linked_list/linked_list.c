@@ -52,7 +52,7 @@ void l_destroy(list l) {
     while (l->head) {
         n = l->head;
         l->head = l->head->next;
-        free(l->head);
+        free(n);
     }
     free(l);
 }

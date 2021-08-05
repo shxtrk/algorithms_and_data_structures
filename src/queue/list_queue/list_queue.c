@@ -14,7 +14,7 @@ struct _queue {
 };
 
 queue q_create() {
-    queue q = (queue)malloc(sizeof(queue));
+    queue q = (queue)malloc(sizeof(struct _queue));
     if (q == NULL) {
         fprintf(stderr, "Not enough memory!");
         abort();
@@ -35,7 +35,7 @@ void q_destroy(queue q) {
 }
 
 void q_enqueue(queue q, q_type v) {
-    node new = (node)malloc(sizeof(node));
+    node new = (node)malloc(sizeof(struct _node));
     if (new == NULL) {
         fprintf(stderr, "Not enough memory!");
         abort();
