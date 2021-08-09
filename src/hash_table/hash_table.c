@@ -13,6 +13,7 @@ typedef struct _node* node;
 struct _node {
     ht_key_type key;
     ht_value_type value;
+    char del;
 };
 
 struct _hash_table {
@@ -35,7 +36,7 @@ static node ht_get_node(hash_table ht, ht_key_type k) {
     int hash = ht_hash(k, ht->capacity);
     int x = 1, index = hash;
     while (1) {
-        if (ht->array[index] != NULL)
+        if (ht->array[index] != NULL && !ht->array[index]->del)
             if (ht->array[index]->key == k) return ht->array[index];
             else index = (hash + (x++ * PROBING_FACTOR)) % ht->capacity;
         else return NULL;
@@ -46,12 +47,17 @@ static int ht_add_into(node* array, int c, ht_key_type k, ht_value_type v) {
     int hash = ht_hash(k, c);
     int x = 1, index = hash;
     while (1) {
-        if (array[index] != NULL) {
+        if (array[index] != NULL && !array[index]->del) {
             if (array[index]->key == k) {
                 array[index]->value = v;
                 return 0;
             } else index = (hash + (x++ * PROBING_FACTOR)) % c;
         } else {
+            if (array[index] != NULL) {
+                array[index]->value = v;
+                array[index]->del = 0;
+                return 1;
+            }
             node n = (node)malloc(sizeof(struct _node));
             if (n == NULL) {
                 fprintf(stderr, "Not enough memory!");
@@ -59,6 +65,7 @@ static int ht_add_into(node* array, int c, ht_key_type k, ht_value_type v) {
             }
             n->key = k;
             n->value = v;
+            n->del = 0;
             array[index] = n;
             return 1;
         }
@@ -75,10 +82,11 @@ static void ht_increase_capacity(hash_table ht) {
         abort();
     }
     for (int i = 0; i < new_cap; i++)
-         *(new_array + i) = NULL;
+        *(new_array + i) = NULL;
     for (int i = 0; i < ht->capacity; i++)
         if (*(ht->array + i) != NULL) {
-            ht_add_into(new_array, new_cap, ht->array[i]->key, ht->array[i]->value);
+            if (!ht->array[i]->del)
+                ht_add_into(new_array, new_cap, ht->array[i]->key, ht->array[i]->value);
             free(ht->array[i]);
         }
     free(ht->array);
@@ -141,10 +149,9 @@ void ht_remove(hash_table ht, ht_key_type k) {
     int hash = ht_hash(k, ht->capacity);
     int x = 1, index = hash;
     while (1) {
-        if (ht->array[index] != NULL) {
+        if (ht->array[index] != NULL && !ht->array[index]->del) {
             if (ht->array[index]->key == k) {
-                free(ht->array[index]);
-                ht->array[index] = NULL;
+                ht->array[index]->del = 1;
                 return;
             } else index = (hash + (x++ * PROBING_FACTOR)) % ht->capacity;
         } else {
