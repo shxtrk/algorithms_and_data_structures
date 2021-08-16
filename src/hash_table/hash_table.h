@@ -1,5 +1,5 @@
-#ifndef VECTOR_INCLUDED
-#define VECTOR_INCLUDED
+#ifndef HASH_TABLE_INCLUDED
+#define HASH_TABLE_INCLUDED
 
 typedef struct _hash_table* hash_table;
 typedef int ht_key_type;
