@@ -11,6 +11,5 @@ int max_h_size(max_heap);
 int max_h_is_empty(max_heap);
 void max_h_insert(max_heap, max_h_type);
 max_h_type max_h_extract(max_heap);
-void max_h_sort(max_h_type *, int);
 
 #endif

@@ -41,24 +41,6 @@ static void sift_down(max_h_type *array, int s, int i) {
     }
 }
 
-static void max_h_heapify(max_h_type *array, int s, int i) {
-    int left = 2 * i + 1;
-    int right = 2 * i + 2;
-    int largest = i;
-    if (left < s && array[left] > array[largest]) {
-        largest = left;
-    }
-    if (right < s && array[right] > array[largest]) {
-        largest = right;
-    }
-    if (largest != i) {
-        int temp = array[i];
-        array[i] = array[largest];
-        array[largest] = temp;
-        max_h_heapify(array, s, largest);
-    }
-}
-
 max_heap max_h_create(int capacity) {
     max_heap h = (max_heap)malloc(sizeof(struct _max_heap));
     if (h == NULL) {
@@ -114,17 +96,4 @@ max_h_type max_h_extract(max_heap h) {
     h->array[0] = h->array[--h->size];
     sift_down(h->array, h->size, 0);
     return v;
-}
-
-void max_h_sort(max_h_type *array, int s) {
-    for (int i = s / 2 - 1; i >= 0; i--) {
-        max_h_heapify(array, s, i);
-    }
-
-    for (int i = s - 1; i > 0; i--) {
-        int temp = array[i];
-        array[i] = array[0];
-        array[0] = temp;
-        max_h_heapify(array, i, 0);
-    }
 }
