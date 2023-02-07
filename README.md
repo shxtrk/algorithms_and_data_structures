@@ -1,2 +1,2 @@
-# coding-interview-university-checklist
-Coding Interview University Progress Checklist
+# Algorithms and Data Structures
+Algorithms and Data Structures
